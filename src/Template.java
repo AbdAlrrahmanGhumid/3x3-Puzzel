@@ -2,13 +2,15 @@
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import javax.swing.*;
+import java.awt.event.*;
 
-public class Template {
+
+public class Template extends JFrame implements KeyListener{
     public Template() {
         do {
             generateRandomPuzzle();
         } while (!isSolvable());
-
     }
 
     Integer rightNeighbour, leftNeighbour, upperNeighbour, lowerNeighbour; // these variables are not the true
@@ -117,6 +119,8 @@ public class Template {
                     content[rightNeighbour] = null;
                     updateNullPosition();
                     updateNeighbours();
+                    viewPuzzle();
+                    checkWinning();
                 }
                 break;
             case "Left":
@@ -126,6 +130,8 @@ public class Template {
                     content[leftNeighbour] = null;
                     updateNullPosition();
                     updateNeighbours();
+                    viewPuzzle();
+                    checkWinning();
                 }
                 break;
             case "Up":
@@ -135,6 +141,8 @@ public class Template {
                     content[upperNeighbour] = null;
                     updateNullPosition();
                     updateNeighbours();
+                    viewPuzzle();
+                    checkWinning();
                 }
                 break;
             case "Down":
@@ -144,6 +152,8 @@ public class Template {
                     content[lowerNeighbour] = null;
                     updateNullPosition();
                     updateNeighbours();
+                    viewPuzzle();
+                    checkWinning();
                 }
                 break;
         }
@@ -198,6 +208,39 @@ public class Template {
                 break;
             }
         }
+        if (won) System.out.println("You Won The Game!");
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) { 
+            case KeyEvent.VK_UP: 
+                move("Down");
+                break; 
+            case KeyEvent.VK_DOWN: 
+                move("Up");
+                break; 
+            case KeyEvent.VK_LEFT: 
+                move("Right");
+                break; 
+            case KeyEvent.VK_RIGHT: 
+                move("Left");
+                break; 
+        } 
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'keyPressed'");
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
     }
 
 }

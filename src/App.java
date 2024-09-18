@@ -1,31 +1,49 @@
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
-import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) throws Exception {
-
-        Template template = new Template(); // an instance of the 3x3 puzzle is initilised
-
-        while (!template.won) { // as long as the game is not won
-            template.viewPuzzle();
-            try { // try-catch to avoid invalid input: i < 1, i >8 , strings
-                template.move(getUserInput()); // getUserInput ask the user to enter a number
-            } catch (Exception e) {
-                System.out.println("invalid input!");
-            }
-            template.checkWinning();
-        }
-        
+        int steps = 0;
+        Template template = new Template();
+        Terminal terminal = TerminalBuilder.terminal();
+        terminal.enterRawMode();
+        java.io.Reader reader = terminal.reader();
         template.viewPuzzle();
-        System.out.println("YOU WON THE GAME!");    
+        double enterTime = System.currentTimeMillis();
+        while(!template.won){
+            int firstChar = reader.read();  // First character of the sequence
 
-    }
+            if (firstChar == '\u001B') {  // Escape character
+                int secondChar = reader.read();  // Next part of the sequence
+                if (secondChar == '[') {
+                    int thirdChar = reader.read();  // This identifies the arrow key
+                    switch (thirdChar) {
+                        case 'A':  // Up arrow
+                            template.move("Down");
+                            break;
+                        case 'B':  // Down arrow
+                            template.move("Up");
+                            break;
+                        case 'C':  // Right arrow
+                            template.move("Left");
+                            break;
+                        case 'D':  // Left arrow
+                            template.move("Right");
+                            break;
+                    }
+                }
+                steps ++;
+            } else {
+                System.out.println("invaild input!");
+                template.viewPuzzle();
+            }
+        }
+        double exitTime = System.currentTimeMillis();
+        double requiredTimeInSeconds = (exitTime - enterTime) / 1000;
+        System.out.println(steps + " steps.");
+        System.out.println(requiredTimeInSeconds + " seconds.");
 
-    public static int getUserInput() {
-        Scanner myObj = new Scanner(System.in); // Create a Scanner object
-        System.out.println("Enter Puzzle Number to Move");
-        String input = myObj.nextLine(); // Read user input
-        return Integer.valueOf(input);
     }
 
 }
